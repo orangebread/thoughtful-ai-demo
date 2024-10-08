@@ -2,6 +2,10 @@
 
 This project implements a customer support AI agent for Thoughtful AI using a Retrieval-Augmented Generation (RAG) strategy. It leverages OpenAI's API for response generation and uses SentenceTransformers for generating embeddings.
 
+## Demo Screenshot
+
+![Demo Screenshot](demo.png)
+
 ## Features
 
 - **Retrieval-Augmented Generation (RAG)**: Combines information retrieval with generative AI to provide accurate and contextually relevant responses.
@@ -32,19 +36,19 @@ Before running the application, ensure you have the following:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/thoughtful-ai-support-agent.git
-   cd thoughtful-ai-support-agent
+   git clone https://github.com/yourusername/thoughtful-ai-demo.git
+   cd thoughtful-ai-demo
    ```
 
 2. **Create a Virtual Environment** (Optional but Recommended)
 
    ```bash
-   python -m venv venv
+   python -m venv .venv
    # Activate the virtual environment:
    # On Windows:
-   venv\Scripts\activate
+   .venv\Scripts\Activate.ps1
    # On macOS/Linux:
-   source venv/bin/activate
+   source .venv/bin/activate
    ```
 
 3. **Install Dependencies**

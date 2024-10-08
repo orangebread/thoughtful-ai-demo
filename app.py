@@ -2,8 +2,8 @@ import streamlit as st
 from neo4j import GraphDatabase
 from sentence_transformers import SentenceTransformer, util
 import torch
-import openai
-import openai.error
+from openai import OpenAI  
+from openai import OpenAIError
 import os
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 if not openai_api_key:
     st.error("OpenAI API key is not set. Please set the OPENAI_API_KEY environment variable.")
     raise ValueError("OpenAI API key is not set.")
-openai.api_key = openai_api_key
+client = OpenAI(api_key=openai_api_key)
 
 # Neo4j connection details
 NEO4J_URI = os.getenv("NEO4J_URI")  
@@ -83,7 +83,7 @@ def find_most_similar_question(user_query, similarity_threshold=0.3):
     # No similar question found above the threshold
     # Fallback to OpenAI's GPT-3.5-turbo
     try:
-        assistant_response = openai.ChatCompletion.create(
+        assistant_response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                     # Start of Selection
@@ -93,7 +93,7 @@ def find_most_similar_question(user_query, similarity_threshold=0.3):
             timeout=15  # Optional timeout in seconds
         )
         response_text = assistant_response['choices'][0]['message']['content'].strip()
-    except openai.error.OpenAIError as e:
+    except OpenAIError as e:
         st.error(f"OpenAI API error: {e}")
         response_text = "I'm sorry, I'm unable to process your request at the moment."
 
@@ -119,6 +119,7 @@ if 'history' not in st.session_state:
 user_input = st.text_input("You:", key='input')
 
 if user_input:
+    # Proceed with the conversation
     st.session_state['history'].append(("You", user_input))
 
     # Get the assistant's response
@@ -126,6 +127,8 @@ if user_input:
     response = result['answer']
 
     st.session_state['history'].append(("Assistant", response))
+else:
+    st.error("Please enter a message.")
 
 # Display conversation history
 for speaker, message in st.session_state['history']:
